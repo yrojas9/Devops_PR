@@ -3,7 +3,13 @@ pipeline {
   stages {
     stage('Hello World') {
       steps {
-        echo 'Hello from blue ocean'
+        echo "Audit all tools to be used on this pipeline ${BRANCH}"
+        sh "git --version"
+        sh "node --version"
+        sh"npm --version"
+        sh "git --version"
+        sh "ng --version"
+        sh "ansible --version"
       }
     }
 
