@@ -15,7 +15,7 @@ pipeline {
         sh "npm --version"
         sh "ng --version"
         sh "ansible --version"
-        echo "Workspace Folder: ${WORKSPACE}"
+        echo "Devops  Folder: ${DEVOPS}"
       }
     }
     stage('Install packages') {
@@ -25,7 +25,7 @@ pipeline {
     }
     stage('Install Front-End Packages') {
       steps {
-        dir("${WORKSPACE}/conduit-ui") {
+        dir("${DEVOPS}/conduit-ui") {
           echo "Install conduit UI packages"
           sh "npm install"
         }
@@ -33,14 +33,14 @@ pipeline {
     }
     stage('Run linting') {
       steps {
-        dir("${WORKSPACE}/conduit-ui") {
+        dir("${C:\Users\Administrator\Documents\Devops_PR\Devops_PR") {
           echo "npm run lint"
         }
       }
     }
     stage('Build UI') {
       steps {
-        dir("${WORKSPACE}/conduit-ui") {
+        dir("${C:\Users\Administrator\Documents\Devops_PR\Devops_PR") {
           sh "npm run build"
         }
       }
@@ -48,7 +48,7 @@ pipeline {
     stage('Deploy app to ssh jenkins@ec2-35-183-57-160.ca-central-1.compute.amazonaws.com') {
       steps {
         sh "ssh jenkins@ec2-35-183-57-160.ca-central-1.compute.amazonaws.com rm -rf /home/${SSHUSER}/conduit"
-        sh "scp -r ${WORKSPACE}/conduit-ui/dist web01:/home/${SSHUSER}/conduit"
+        sh "scp -r ${DEVOPS} C:\Users\Administrator\Documents\Devops_PR\Devops_PR:/home/${SSHUSER}/conduit"
         sh "ssh jenkins@ec2-35-183-57-160.ca-central-1.compute.amazonaws.com sudo rm -rf ${WWWROOT}/conduit"
         sh "ssh jenkins@ec2-35-183-57-160.ca-central-1.compute.amazonaws.com sudo cp -r /home/${SSHUSER}/conduit ${WWWROOT}/conduit"
       }
