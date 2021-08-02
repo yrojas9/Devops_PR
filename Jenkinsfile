@@ -45,7 +45,7 @@ pipeline {
         }
       }
     }
-    stage('Deploy app to WEB01') {
+    stage('Deploy app to ssh jenkins@ec2-35-183-57-160.ca-central-1.compute.amazonaws.com') {
       steps {
         sh "ssh jenkins@ec2-35-183-57-160.ca-central-1.compute.amazonaws.com rm -rf /home/${SSHUSER}/conduit"
         sh "scp -r ${WORKSPACE}/conduit-ui/dist web01:/home/${SSHUSER}/conduit"
