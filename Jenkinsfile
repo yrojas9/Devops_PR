@@ -33,14 +33,14 @@ pipeline {
     }
     stage('Run linting') {
       steps {
-        dir("${C:\Users\Administrator\Documents\Devops_PR\Devops_PR") {
+        dir("${WORKSPACE}/conduit-ui") {
           echo "npm run lint"
         }
       }
     }
     stage('Build UI') {
       steps {
-        dir("${C:\Users\Administrator\Documents\Devops_PR\Devops_PR") {
+        dir("${WORKSPACE}/conduit-ui") {
           sh "npm run build"
         }
       }
