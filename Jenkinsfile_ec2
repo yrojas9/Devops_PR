@@ -1,10 +1,11 @@
 pipeline {
   agent any
   environment {
-    COURSE = 'DevOps'
+    COURSE = 'Calgary DevOps'
     BRANCH = 'main'
-    WWWROOT = '/var/www/html'
+    WWWROOT = '/var/www'
     SSHUSER = 'jenkins'
+    SSHKEY = '/var/lib/jenkins/.ssh/aws_ec2_key.pem'
   }
   stages {
     stage('Audit Tools') {
@@ -15,7 +16,7 @@ pipeline {
         sh "npm --version"
         sh "ng --version"
         sh "ansible --version"
-        echo "Devops  Folder: ${DEVOPS}"
+        echo "Workspace Folder: ${WORKSPACE}"
       }
     }
     stage('Install packages') {
@@ -25,7 +26,7 @@ pipeline {
     }
     stage('Install Front-End Packages') {
       steps {
-        dir("${DEVOPS}/conduit-ui") {
+        dir("${WORKSPACE}/conduit-ui") {
           echo "Install conduit UI packages"
           sh "npm install"
         }
@@ -33,24 +34,24 @@ pipeline {
     }
     stage('Run linting') {
       steps {
-        dir("${C:\Users\Administrator\Documents\Devops_PR\Devops_PR") {
+        dir("${WORKSPACE}/conduit-ui") {
           echo "npm run lint"
         }
       }
     }
     stage('Build UI') {
       steps {
-        dir("${C:\Users\Administrator\Documents\Devops_PR\Devops_PR") {
+        dir("${WORKSPACE}/conduit-ui") {
           sh "npm run build"
         }
       }
     }
-    stage('Deploy app to ssh jenkins@ec2-35-183-57-160.ca-central-1.compute.amazonaws.com') {
+    stage('Deploy app to WEB01') {
       steps {
-        sh "ssh jenkins@ec2-35-183-57-160.ca-central-1.compute.amazonaws.com rm -rf /home/${SSHUSER}/conduit"
-        sh "scp -r ${DEVOPS} C:\Users\Administrator\Documents\Devops_PR\Devops_PR:/home/${SSHUSER}/conduit"
-        sh "ssh jenkins@ec2-35-183-57-160.ca-central-1.compute.amazonaws.com sudo rm -rf ${WWWROOT}/conduit"
-        sh "ssh jenkins@ec2-35-183-57-160.ca-central-1.compute.amazonaws.com sudo cp -r /home/${SSHUSER}/conduit ${WWWROOT}/conduit"
+        sh "ssh -i ${SSHKEY} ec2web01 rm -rf /home/${SSHUSER}/conduit"
+        sh "scp -i ${SSHKEY} -r ${WORKSPACE}/conduit-ui/dist ec2web01:/home/${SSHUSER}/conduit"
+        sh "ssh -i ${SSHKEY} ec2web01 sudo rm -rf ${WWWROOT}/conduit"
+        sh "ssh -i ${SSHKEY} ec2web01 sudo cp -r /home/${SSHUSER}/conduit ${WWWROOT}/conduit"
       }
     }
   }
