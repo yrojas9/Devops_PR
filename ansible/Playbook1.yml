@@ -1,0 +1,21 @@
+- name: First Ansible Playbook
+- hosts: all
+
+  tasks:
+    - name: "Ping all servers"
+      ping:
+    
+    - name: Install Python3 
+      apt:
+        name: python3
+        state: present
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Install Gunicorns
+      apt:
+        name: gunicorn
+        state: present
